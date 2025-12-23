@@ -10,10 +10,10 @@ import GoldCursor from '../components/GoldCursor';
 // --- NEW SECTIONS ---
 import HeroSection from '../components/HeroSection';
 import VogueGallery from '../components/VogueGallery'; // The NEW Vertical Scroll Gallery
-import TextureMoodboard from '../components/TextureMoodboard'; // The Brainstormed Moodboard
 import LoveLetter from '../components/LoveLetter'; // The Letter
 import OpenWhen from '../components/OpenWhen'; // The Flip Cards
 import MagazineDreams from '../components/MagazineDreams';
+import TimeCapsule from '../components/TimeCapsule';
 import MagazineFooter from '../components/MagazineFooter';
 
 const Index = () => {
@@ -116,14 +116,15 @@ const Index = () => {
             {/* 3. The Gallery (Vertical Scroll Fixed) */}
             <VogueGallery />
 
-            {/* 4. The Moodboard (Texture filler) */}
-            <TextureMoodboard />
-
             {/* 5. Open When Cards (Interactive) */}
             <OpenWhen />
             
             {/* 7. Dreams (Checklist) */}
             <MagazineDreams />
+            {/* SECTION 8: Time Capsule (New) */}
+            <div id="journal">
+            <TimeCapsule />
+             </div>
 
             {/* 8. Footer */}
             <MagazineFooter />
