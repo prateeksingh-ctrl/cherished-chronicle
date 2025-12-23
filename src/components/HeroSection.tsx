@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import Snowfall from 'react-snowfall';
-import { ChevronDown, Sparkles } from 'lucide-react';
+import { ChevronDown, Star } from 'lucide-react';
 
 interface HeroSectionProps {
   onStartJourney: () => void;
@@ -14,9 +14,9 @@ const HeroSection = ({ onStartJourney }: HeroSectionProps) => {
     offset: ['start start', 'end start'],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 150]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
 
   return (
     <section
@@ -26,11 +26,11 @@ const HeroSection = ({ onStartJourney }: HeroSectionProps) => {
     >
       {/* Gold Snowfall */}
       <Snowfall
-        color="#e1c44d"
-        snowflakeCount={150}
-        speed={[0.5, 2]}
-        wind={[-0.5, 1]}
-        radius={[1, 4]}
+        color="#d4a853"
+        snowflakeCount={120}
+        speed={[0.3, 1.5]}
+        wind={[-0.3, 0.8]}
+        radius={[0.5, 3]}
         style={{
           position: 'absolute',
           width: '100%',
@@ -39,25 +39,26 @@ const HeroSection = ({ onStartJourney }: HeroSectionProps) => {
         }}
       />
 
-      {/* Animated background orbs */}
+      {/* Ambient orbs */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {[...Array(5)].map((_, i) => (
+        {[...Array(4)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full bg-magazine-gold/10 blur-3xl"
+            className="absolute rounded-full blur-3xl"
             style={{
-              width: `${100 + i * 50}px`,
-              height: `${100 + i * 50}px`,
-              left: `${10 + i * 20}%`,
-              top: `${20 + i * 15}%`,
+              width: `${150 + i * 80}px`,
+              height: `${150 + i * 80}px`,
+              left: `${5 + i * 25}%`,
+              top: `${15 + i * 20}%`,
+              background: `radial-gradient(circle, hsl(38 52% 55% / ${0.08 - i * 0.015}), transparent 70%)`,
             }}
             animate={{
-              x: [0, 30, -30, 0],
-              y: [0, -30, 30, 0],
-              scale: [1, 1.2, 0.9, 1],
+              x: [0, 20, -20, 0],
+              y: [0, -25, 25, 0],
+              scale: [1, 1.1, 0.95, 1],
             }}
             transition={{
-              duration: 8 + i * 2,
+              duration: 10 + i * 3,
               repeat: Infinity,
               ease: 'easeInOut',
             }}
@@ -65,43 +66,40 @@ const HeroSection = ({ onStartJourney }: HeroSectionProps) => {
         ))}
       </div>
 
-      {/* Main content with parallax */}
+      {/* Main content */}
       <motion.div
         style={{ y, opacity, scale }}
-        className="relative z-10 text-center"
+        className="relative z-10 px-4 text-center"
       >
+        {/* Decorative stars */}
         <motion.div
-          initial={{ opacity: 0, y: -30, scale: 0 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8, type: 'spring' }}
-          className="mb-8"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="mb-8 flex items-center justify-center gap-4"
         >
-          <motion.div
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity }}
-          >
-            <Sparkles className="mx-auto h-16 w-16 text-magazine-gold" />
-          </motion.div>
+          <Star className="h-4 w-4 text-magazine-gold/60" fill="currentColor" />
+          <Star className="h-5 w-5 text-magazine-gold" fill="currentColor" />
+          <Star className="h-4 w-4 text-magazine-gold/60" fill="currentColor" />
         </motion.div>
 
-        {/* Title with staggered reveal */}
-        <div className="overflow-hidden">
-          <motion.p
-            initial={{ y: 100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="mb-2 font-body text-sm uppercase tracking-[0.4em] text-magazine-gold/80"
-          >
-            A Love Story
-          </motion.p>
-        </div>
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mb-4 font-body text-xs uppercase tracking-[0.4em] text-magazine-gold/70"
+        >
+          A Love Story
+        </motion.p>
 
+        {/* Main title */}
         <div className="overflow-hidden">
           <motion.h1
-            initial={{ y: 150 }}
+            initial={{ y: 100 }}
             animate={{ y: 0 }}
-            transition={{ duration: 1, delay: 0.4, type: 'spring', stiffness: 50 }}
-            className="font-editorial text-8xl font-light tracking-tight text-magazine-cream sm:text-9xl md:text-[12rem]"
+            transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display text-7xl font-medium tracking-tight text-magazine-cream sm:text-8xl md:text-9xl"
           >
             Our
           </motion.h1>
@@ -109,67 +107,69 @@ const HeroSection = ({ onStartJourney }: HeroSectionProps) => {
 
         <div className="overflow-hidden">
           <motion.h1
-            initial={{ y: 150 }}
+            initial={{ y: 100 }}
             animate={{ y: 0 }}
-            transition={{ duration: 1, delay: 0.6, type: 'spring', stiffness: 50 }}
-            className="font-script -mt-8 text-7xl text-gold-gradient sm:text-8xl md:text-9xl"
+            transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="text-shimmer -mt-4 font-display text-6xl font-medium italic sm:text-7xl md:text-8xl"
           >
             2025
           </motion.h1>
         </div>
 
+        {/* Divider */}
         <motion.div
           initial={{ opacity: 0, scaleX: 0 }}
           animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ duration: 1, delay: 1 }}
+          transition={{ duration: 1, delay: 0.8 }}
           className="mx-auto mt-8 flex items-center justify-center gap-4"
         >
-          <span className="h-px w-16 bg-magazine-gold/50" />
-          <span className="font-body text-xs uppercase tracking-[0.3em] text-magazine-cream/70">
+          <span className="h-px w-12 bg-magazine-gold/40 md:w-16" />
+          <span className="font-body text-[10px] uppercase tracking-[0.3em] text-magazine-cream/50">
             Recap Magazine
           </span>
-          <span className="h-px w-16 bg-magazine-gold/50" />
+          <span className="h-px w-12 bg-magazine-gold/40 md:w-16" />
         </motion.div>
 
+        {/* CTA Button */}
         <motion.button
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.3 }}
+          transition={{ duration: 0.8, delay: 1.1 }}
           onClick={onStartJourney}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="group mt-16 inline-flex items-center gap-3 rounded-full border-2 border-magazine-gold/50 bg-magazine-gold/10 px-10 py-5 font-body text-sm uppercase tracking-widest text-magazine-cream backdrop-blur-sm transition-all duration-300 hover:border-magazine-gold hover:bg-magazine-gold/20"
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.98 }}
+          className="group mt-16 inline-flex items-center gap-3 rounded-full border border-magazine-gold/40 bg-magazine-gold/5 px-8 py-4 font-body text-xs uppercase tracking-[0.15em] text-magazine-cream backdrop-blur-sm transition-all duration-500 hover:border-magazine-gold/70 hover:bg-magazine-gold/15"
         >
           <span>Begin Our Journey</span>
           <motion.span
-            animate={{ y: [0, 8, 0] }}
+            animate={{ y: [0, 6, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            <ChevronDown className="h-5 w-5" />
+            <ChevronDown className="h-4 w-4" />
           </motion.span>
         </motion.button>
       </motion.div>
 
-      {/* Decorative corner elements */}
+      {/* Corner ornaments */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute left-8 top-8 font-script text-6xl text-magazine-gold/20"
+        transition={{ delay: 1.3 }}
+        className="absolute left-6 top-6 font-handwritten text-5xl text-magazine-gold/15 md:left-10 md:top-10 md:text-6xl"
       >
         ❧
       </motion.div>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 right-8 rotate-180 font-script text-6xl text-magazine-gold/20"
+        transition={{ delay: 1.3 }}
+        className="absolute bottom-6 right-6 rotate-180 font-handwritten text-5xl text-magazine-gold/15 md:bottom-10 md:right-10 md:text-6xl"
       >
         ❧
       </motion.div>
 
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent" />
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
     </section>
   );
 };

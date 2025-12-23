@@ -5,7 +5,7 @@ import GoldCursor from '../components/GoldCursor';
 import NavigationDock from '../components/NavigationDock';
 import HeroSection from '../components/HeroSection';
 import VogueGallery from '../components/VogueGallery';
-import MusicSection from '../components/MusicSection';
+import LoveLetterSection from '../components/LoveLetterSection';
 import DreamsSection from '../components/DreamsSection';
 import SantaUnveiling from '../components/SantaUnveiling';
 import ScratchCard from '../components/ScratchCard';
@@ -19,6 +19,10 @@ const Index = () => {
     // Check if device has hover capability (not touch-only)
     const hasHover = window.matchMedia('(hover: hover)').matches;
     setShowCursor(hasHover);
+  }, []);
+
+  useEffect(() => {
+    if (!isUnlocked) return;
 
     // Intersection Observer for active section
     const sections = ['hero', 'memories', 'music', 'goals', 'surprise'];
@@ -89,7 +93,7 @@ const Index = () => {
           <main className="relative">
             <HeroSection onStartJourney={handleStartJourney} />
             <VogueGallery />
-            <MusicSection />
+            <LoveLetterSection />
             <DreamsSection />
             <ScratchCard />
           </main>
