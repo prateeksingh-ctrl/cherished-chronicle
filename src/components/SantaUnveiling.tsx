@@ -1,7 +1,6 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Gift, Star, Heart, Sparkles } from 'lucide-react';
-import Snowfall from 'react-snowfall';
 
 interface SantaUnveilingProps {
   onUnlock: () => void;
@@ -11,6 +10,7 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   
   const dragProgress = useMotionValue(0);
   const sleighX = useTransform(dragProgress, [0, 1], [0, 280]);
@@ -19,11 +19,15 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
   const giftScale = useTransform(dragProgress, [0, 0.5, 1], [0.8, 1, 1.2]);
   const giftGlow = useTransform(dragProgress, [0, 1], [0, 40]);
   
-  // Move this hook to top level - this was causing the error
   const giftBoxShadow = useTransform(
     giftGlow,
     (v) => `0 0 ${v}px ${v / 2}px rgba(197, 160, 89, 0.4)`
   );
+
+  // Ensure component is mounted before rendering Snowfall
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Memoize star positions to prevent re-renders
   const starPositions = useMemo(() => 
@@ -33,6 +37,17 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
       top: `${Math.random() * 70}%`,
       duration: 2 + Math.random() * 3,
       delay: Math.random() * 2,
+    })), []
+  );
+
+  // Memoize snowflake positions as CSS-based alternative
+  const snowflakes = useMemo(() => 
+    [...Array(60)].map((_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      size: Math.random() * 3 + 1,
+      duration: Math.random() * 5 + 5,
+      delay: Math.random() * 5,
     })), []
   );
 
@@ -60,20 +75,33 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
       transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
       className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-night-sky"
     >
-      {/* Heavy Snowfall */}
-      <Snowfall
-        color="#fff"
-        snowflakeCount={180}
-        speed={[0.5, 2]}
-        wind={[-0.5, 1.5]}
-        radius={[1, 4]}
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          zIndex: 2,
-        }}
-      />
+      {/* CSS-based Snowfall - more reliable than react-snowfall */}
+      {isMounted && (
+        <div className="pointer-events-none absolute inset-0 z-[2] overflow-hidden">
+          {snowflakes.map((flake) => (
+            <motion.div
+              key={flake.id}
+              className="absolute rounded-full bg-white"
+              style={{
+                left: flake.left,
+                width: flake.size,
+                height: flake.size,
+                top: -10,
+              }}
+              animate={{
+                y: ['0vh', '110vh'],
+                x: [0, Math.sin(flake.id) * 50],
+              }}
+              transition={{
+                duration: flake.duration,
+                repeat: Infinity,
+                delay: flake.delay,
+                ease: 'linear',
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Starfield */}
       <div className="absolute inset-0 z-0">
