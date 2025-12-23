@@ -1,83 +1,63 @@
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-interface Particle {
-  id: number;
-  x: number;
-  y: number;
-}
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 const GoldCursor = () => {
-  const [particles, setParticles] = useState<Particle[]>([]);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  // Smooth spring physics for the cursor
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  
+  const springConfig = { damping: 25, stiffness: 700 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
-    let particleId = 0;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-      
-      // Create new particle
-      const newParticle: Particle = {
-        id: particleId++,
-        x: e.clientX,
-        y: e.clientY,
-      };
-
-      setParticles((prev) => [...prev.slice(-15), newParticle]);
+    const moveCursor = (e: MouseEvent) => {
+      cursorX.set(e.clientX - 16);
+      cursorY.set(e.clientY - 16);
+      setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+    // Check if hovering over clickable elements
+    const checkHover = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      setIsHovering(
+        target.tagName === 'BUTTON' || 
+        target.tagName === 'A' || 
+        target.closest('button') !== null ||
+        target.closest('.interactive') !== null
+      );
+    };
 
-  useEffect(() => {
-    const cleanup = setInterval(() => {
-      setParticles((prev) => prev.slice(1));
-    }, 100);
+    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('mouseover', checkHover);
 
-    return () => clearInterval(cleanup);
+    return () => {
+      window.removeEventListener('mousemove', moveCursor);
+      window.removeEventListener('mouseover', checkHover);
+    };
   }, []);
 
   return (
-    <>
-      {/* Main cursor glow */}
+    <div className="pointer-events-none fixed inset-0 z-[9999] hidden md:block">
+      {/* The Main Ring */}
       <motion.div
-        className="pointer-events-none fixed z-50 h-6 w-6 rounded-full"
+        className="absolute w-8 h-8 border border-magazine-gold rounded-full flex items-center justify-center"
         style={{
-          background: 'radial-gradient(circle, hsl(45 75% 60% / 0.8) 0%, transparent 70%)',
-          boxShadow: '0 0 20px hsl(45 75% 60% / 0.5)',
+          x: cursorXSpring,
+          y: cursorYSpring,
         }}
         animate={{
-          x: mousePos.x - 12,
-          y: mousePos.y - 12,
+          scale: isHovering ? 1.5 : 1,
+          opacity: isHovering ? 1 : 0.5,
+          borderColor: isHovering ? '#D4AF37' : 'rgba(212,175,55,0.3)'
         }}
-        transition={{
-          type: 'spring',
-          stiffness: 500,
-          damping: 28,
-        }}
-      />
-
-      {/* Trailing particles */}
-      <AnimatePresence>
-        {particles.map((particle) => (
-          <motion.div
-            key={particle.id}
-            className="pointer-events-none fixed z-40 h-2 w-2 rounded-full"
-            style={{
-              background: 'hsl(45 75% 60% / 0.6)',
-              left: particle.x - 4,
-              top: particle.y - 4,
-            }}
-            initial={{ opacity: 1, scale: 1 }}
-            animate={{ opacity: 0, scale: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          />
-        ))}
-      </AnimatePresence>
-    </>
+      >
+        <div className="w-1 h-1 bg-magazine-gold rounded-full" />
+      </motion.div>
+    </div>
   );
 };
 
