@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { AnimatePresence } from 'framer-motion';
 import GoldCursor from '../components/GoldCursor';
 import NavigationDock from '../components/NavigationDock';
 import HeroSection from '../components/HeroSection';
@@ -12,6 +13,7 @@ import ScratchCard from '../components/ScratchCard';
 const Index = () => {
   const [activeSection, setActiveSection] = useState('hero');
   const [showCursor, setShowCursor] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
     // Check if device has hover capability (not touch-only)
@@ -19,7 +21,7 @@ const Index = () => {
     setShowCursor(hasHover);
 
     // Intersection Observer for active section
-    const sections = ['hero', 'memories', 'music', 'goals', 'unveiling', 'surprise'];
+    const sections = ['hero', 'memories', 'music', 'goals', 'surprise'];
     const observers = sections.map((sectionId) => {
       const element = document.getElementById(sectionId);
       if (!element) return null;
@@ -42,7 +44,7 @@ const Index = () => {
     return () => {
       observers.forEach((observer) => observer?.disconnect());
     };
-  }, []);
+  }, [isUnlocked]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -55,6 +57,10 @@ const Index = () => {
     scrollToSection('memories');
   };
 
+  const handleUnlock = () => {
+    setIsUnlocked(true);
+  };
+
   return (
     <HelmetProvider>
       <Helmet>
@@ -65,21 +71,30 @@ const Index = () => {
         />
       </Helmet>
 
-      {/* Gold Cursor Effect (desktop only) */}
-      {showCursor && <GoldCursor />}
+      {/* Locked Unveiling Screen */}
+      <AnimatePresence>
+        {!isUnlocked && <SantaUnveiling onUnlock={handleUnlock} />}
+      </AnimatePresence>
 
-      {/* Navigation Dock */}
-      <NavigationDock activeSection={activeSection} onNavigate={scrollToSection} />
+      {/* Main Content - only visible after unlock */}
+      {isUnlocked && (
+        <>
+          {/* Gold Cursor Effect (desktop only) */}
+          {showCursor && <GoldCursor />}
 
-      {/* Main Content */}
-      <main className="relative">
-        <HeroSection onStartJourney={handleStartJourney} />
-        <VogueGallery />
-        <MusicSection />
-        <DreamsSection />
-        <SantaUnveiling />
-        <ScratchCard />
-      </main>
+          {/* Navigation Dock */}
+          <NavigationDock activeSection={activeSection} onNavigate={scrollToSection} />
+
+          {/* Main Content */}
+          <main className="relative">
+            <HeroSection onStartJourney={handleStartJourney} />
+            <VogueGallery />
+            <MusicSection />
+            <DreamsSection />
+            <ScratchCard />
+          </main>
+        </>
+      )}
     </HelmetProvider>
   );
 };
