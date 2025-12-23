@@ -3,42 +3,35 @@ import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Lock } from 'lucide-react';
 
-// --- AMBIENT EFFECTS ---
+// --- VISUALS & EFFECTS ---
 import MagicalSnow from '../components/MagicalSnow';
 import GoldCursor from '../components/GoldCursor';
 
-// --- SECTIONS (THE NARRATIVE) ---
-import HeroSection from '../components/HeroSection';         // The Cover
-import VogueGallery from '../components/VogueGallery';       // The Photos
-import SeasonsTimeline from '../components/SeasonsTimeline'; // The Story (Winter/Spring/etc)
-import MagazineInterview from '../components/MagazineInterview'; // The Q&A // The Voting
-import MagazineDreams from '../components/MagazineDreams';   // The Future (Checklist)
-import MagazineFooter from '../components/MagazineFooter';   // The Back Cover
+// --- NEW SECTIONS ---
+import HeroSection from '../components/HeroSection';
+import VogueGallery from '../components/VogueGallery'; // The NEW Vertical Scroll Gallery
+import TextureMoodboard from '../components/TextureMoodboard'; // The Brainstormed Moodboard
+import LoveLetter from '../components/LoveLetter'; // The Letter
+import OpenWhen from '../components/OpenWhen'; // The Flip Cards
+import MagazineDreams from '../components/MagazineDreams';
+import MagazineFooter from '../components/MagazineFooter';
 
 const Index = () => {
-  // State for the "Lock Screen" and "Audio"
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Audio Logic: Auto-play gently when unlocked
   useEffect(() => {
     if (isUnlocked && audioRef.current) {
-      audioRef.current.volume = 0.4; // not too loud
-      audioRef.current.play()
-        .then(() => setIsPlaying(true))
-        .catch((e) => console.log("Audio requires interaction first", e));
+      audioRef.current.volume = 0.4;
+      audioRef.current.play().then(() => setIsPlaying(true)).catch((e) => console.log("Audio requires interaction", e));
     }
   }, [isUnlocked]);
 
-  // Toggle Audio Button Logic
   const toggleAudio = () => {
     if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
+      if (isPlaying) audioRef.current.pause();
+      else audioRef.current.play();
       setIsPlaying(!isPlaying);
     }
   };
@@ -46,25 +39,17 @@ const Index = () => {
   return (
     <div className="relative w-full min-h-screen cursor-none bg-magazine-paper text-magazine-ink overflow-x-hidden">
       <Helmet>
-        <title>THE ANNUAL | 2025 Holiday Edition</title>
+        <title>THE ANNUAL | 2025 Edition</title>
         <meta name="theme-color" content="#1a1a1a" />
       </Helmet>
 
-      {/* --- 1. GLOBAL AMBIENCE --- */}
-      
-      {/* Film Grain Overlay for that "Printed Paper" texture */}
+      {/* --- AMBIENCE --- */}
       <div className="grain-overlay" />
-      
-      {/* Floating Gold & White Particles */}
       <MagicalSnow />
-      
-      {/* Luxury Trail Cursor */}
       <GoldCursor />
-
-      {/* Hidden Audio Source (Change src to your preferred mp3) */}
       <audio ref={audioRef} loop src="https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3" />
 
-      {/* --- 2. THE LOCK SCREEN (CURTAIN) --- */}
+      {/* --- LOCK SCREEN --- */}
       <AnimatePresence>
         {!isUnlocked && (
           <motion.div 
@@ -72,13 +57,11 @@ const Index = () => {
             exit={{ y: "-100%", transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }}
             className="fixed inset-0 z-[100] bg-magazine-ink text-magazine-paper flex flex-col items-center justify-center"
           >
-             {/* Breathing Glow Effect behind text */}
             <motion.div 
                 animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }}
                 transition={{ duration: 4, repeat: Infinity }}
                 className="absolute w-[300px] h-[300px] bg-magazine-gold/20 rounded-full blur-[100px]"
             />
-            
             <motion.div 
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
@@ -91,8 +74,6 @@ const Index = () => {
               <div className="font-sans text-xs tracking-[0.4em] uppercase text-magazine-gold">
                 Strictly Confidential • Vol. 2025
               </div>
-              
-              {/* Unlock Button */}
               <button 
                 onClick={() => setIsUnlocked(true)}
                 className="group relative px-10 py-4 overflow-hidden rounded-full border border-white/20 hover:border-magazine-gold transition-colors duration-500 mx-auto block mt-12"
@@ -107,7 +88,7 @@ const Index = () => {
         )}
       </AnimatePresence>
 
-      {/* --- 3. MAIN MAGAZINE CONTENT --- */}
+      {/* --- MAIN CONTENT --- */}
       <AnimatePresence>
         {isUnlocked && (
           <motion.main 
@@ -116,7 +97,7 @@ const Index = () => {
             transition={{ duration: 1, delay: 0.5 }}
             className="relative w-full"
           >
-            {/* Sticky Audio Controller (Bottom Right) */}
+            {/* Audio Toggle */}
             <div className="fixed bottom-8 right-8 z-50">
               <button 
                 onClick={toggleAudio} 
@@ -126,32 +107,25 @@ const Index = () => {
               </button>
             </div>
 
-            {/* SECTION 1: The Cover */}
-            <div id="cover">
-              <HeroSection />
-            </div>
+            {/* 1. Cover */}
+            <HeroSection />
 
-            {/* SECTION 2: The Spread (Photos) */}
-            <div id="gallery">
-              <VogueGallery />
-            </div>
+            {/* 2. Letter from Editor (Heartfelt) */}
+            <LoveLetter />
 
-            {/* SECTION 3: The Story (Parallax Seasons) */}
-            <div id="timeline">
-              <SeasonsTimeline />
-            </div>
+            {/* 3. The Gallery (Vertical Scroll Fixed) */}
+            <VogueGallery />
 
-            {/* SECTION 4: The Conversation (Q&A) */}
-            <div id="interview">
-              <MagazineInterview />
-            </div>
+            {/* 4. The Moodboard (Texture filler) */}
+            <TextureMoodboard />
 
-            {/* SECTION 6: The Vision (Checklist) */}
-            <div id="dreams">
-              <MagazineDreams />
-            </div>
+            {/* 5. Open When Cards (Interactive) */}
+            <OpenWhen />
+            
+            {/* 7. Dreams (Checklist) */}
+            <MagazineDreams />
 
-            {/* SECTION 7: The End (Footer) */}
+            {/* 8. Footer */}
             <MagazineFooter />
 
           </motion.main>
