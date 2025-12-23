@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Gift, Star, Heart, Sparkles } from 'lucide-react';
 import Snowfall from 'react-snowfall';
@@ -18,6 +18,23 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
   const snowOpacity = useTransform(dragProgress, [0, 0.8, 1], [1, 0.3, 0]);
   const giftScale = useTransform(dragProgress, [0, 0.5, 1], [0.8, 1, 1.2]);
   const giftGlow = useTransform(dragProgress, [0, 1], [0, 40]);
+  
+  // Move this hook to top level - this was causing the error
+  const giftBoxShadow = useTransform(
+    giftGlow,
+    (v) => `0 0 ${v}px ${v / 2}px rgba(197, 160, 89, 0.4)`
+  );
+
+  // Memoize star positions to prevent re-renders
+  const starPositions = useMemo(() => 
+    [...Array(80)].map(() => ({
+      width: Math.random() > 0.8 ? 3 : Math.random() > 0.5 ? 2 : 1,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 70}%`,
+      duration: 2 + Math.random() * 3,
+      delay: Math.random() * 2,
+    })), []
+  );
 
   const handleDrag = useCallback((event: any, info: any) => {
     const progress = Math.min(Math.max(info.offset.x / 280, 0), 1);
@@ -60,24 +77,24 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
 
       {/* Starfield */}
       <div className="absolute inset-0 z-0">
-        {[...Array(80)].map((_, i) => (
+        {starPositions.map((star, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full bg-white"
             style={{
-              width: Math.random() > 0.8 ? 3 : Math.random() > 0.5 ? 2 : 1,
-              height: Math.random() > 0.8 ? 3 : Math.random() > 0.5 ? 2 : 1,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 70}%`,
+              width: star.width,
+              height: star.width,
+              left: star.left,
+              top: star.top,
             }}
             animate={{
               opacity: [0.2, 0.8, 0.2],
               scale: [1, 1.3, 1],
             }}
             transition={{
-              duration: 2 + Math.random() * 3,
+              duration: star.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: star.delay,
             }}
           />
         ))}
@@ -88,10 +105,9 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.5, delay: 0.3 }}
-        className="absolute right-[15%] top-[10%] z-1"
+        className="absolute right-[15%] top-[10%] z-[1]"
       >
         <div className="relative h-28 w-28 rounded-full bg-gradient-to-br from-amber-50 via-yellow-100 to-amber-100 shadow-[0_0_80px_20px_rgba(255,250,220,0.3)]">
-          {/* Moon craters */}
           <div className="absolute left-4 top-6 h-4 w-4 rounded-full bg-amber-200/30" />
           <div className="absolute bottom-8 right-6 h-3 w-3 rounded-full bg-amber-200/20" />
           <div className="absolute bottom-4 left-8 h-2 w-2 rounded-full bg-amber-200/25" />
@@ -99,7 +115,7 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
       </motion.div>
 
       {/* Aurora effect */}
-      <div className="absolute inset-0 z-1 opacity-20">
+      <div className="absolute inset-0 z-[1] opacity-20">
         <motion.div
           className="absolute left-0 right-0 top-0 h-1/2"
           style={{
@@ -159,23 +175,9 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
                   className="absolute -bottom-4 left-1/2 -translate-x-1/2"
                 >
                   <div className="relative h-20 w-72">
-                    {/* Snow mound shapes */}
                     <div className="absolute bottom-0 left-0 h-16 w-24 rounded-t-full bg-gradient-to-t from-white/80 to-white/95" />
                     <div className="absolute bottom-0 left-16 h-20 w-32 rounded-t-full bg-gradient-to-t from-white/85 to-white" />
                     <div className="absolute bottom-0 right-0 h-14 w-20 rounded-t-full bg-gradient-to-t from-white/75 to-white/90" />
-                    {/* Sparkles on snow */}
-                    {[...Array(6)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute h-1 w-1 rounded-full bg-white"
-                        style={{
-                          left: `${15 + i * 15}%`,
-                          top: `${20 + Math.random() * 40}%`,
-                        }}
-                        animate={{ opacity: [0.3, 1, 0.3] }}
-                        transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
-                      />
-                    ))}
                   </div>
                 </motion.div>
 
@@ -185,12 +187,7 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
                   className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                 >
                   <motion.div
-                    style={{ 
-                      boxShadow: useTransform(
-                        giftGlow, 
-                        v => `0 0 ${v}px ${v/2}px rgba(197, 160, 89, 0.4)`
-                      )
-                    }}
+                    style={{ boxShadow: giftBoxShadow }}
                     className="flex h-24 w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-magazine-gold via-amber-400 to-magazine-gold-dark"
                   >
                     <Gift className="h-12 w-12 text-magazine-dark" />
@@ -199,7 +196,6 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
 
                 {/* Sleigh track */}
                 <div className="relative mx-auto h-32 w-80">
-                  {/* Track line */}
                   <div className="absolute bottom-4 left-4 right-4 h-1 rounded-full bg-magazine-gold/20" />
                   
                   {/* Draggable sleigh */}
@@ -219,16 +215,12 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
                       transition={{ duration: 1.5, repeat: Infinity }}
                       className="relative"
                     >
-                      {/* Sleigh body */}
                       <div className="relative h-16 w-20">
                         <div className="absolute bottom-0 left-0 right-0 h-10 rounded-bl-2xl rounded-br-sm bg-gradient-to-b from-red-500 to-red-700 shadow-lg">
-                          {/* Sleigh details */}
                           <div className="absolute left-2 top-2 h-1 w-6 rounded-full bg-red-400/50" />
                           <div className="absolute left-2 top-4 h-1 w-4 rounded-full bg-red-400/30" />
                         </div>
-                        {/* Runner */}
                         <div className="absolute -bottom-1 left-1 right-1 h-2 rounded-full bg-magazine-gold shadow-md" />
-                        {/* Small gift icon */}
                         <motion.div
                           animate={{ rotate: [-3, 3, -3] }}
                           transition={{ duration: 0.8, repeat: Infinity }}
@@ -274,7 +266,6 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
               <AnimatePresence>
                 {showMessage && (
                   <>
-                    {/* Celebration particles */}
                     {[...Array(20)].map((_, i) => (
                       <motion.div
                         key={i}
@@ -300,7 +291,6 @@ const SantaUnveiling = ({ onUnlock }: SantaUnveilingProps) => {
                       </motion.div>
                     ))}
 
-                    {/* Main gift revealed */}
                     <motion.div
                       initial={{ scale: 0, rotate: -10 }}
                       animate={{ scale: 1, rotate: 0 }}
