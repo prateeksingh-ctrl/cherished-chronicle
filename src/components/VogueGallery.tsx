@@ -34,7 +34,7 @@ const VogueGallery = () => {
          <p className="font-sans text-xs tracking-[0.3em] uppercase text-magazine-gold mt-4">Curated Moments • 2025</p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 space-y-32">
+      <div className="max-w-7xl mx-auto px-6 space-y-16">
         {MEMORIES.map((memory, index) => (
           <motion.div 
             initial={{ opacity: 0, y: 50 }}

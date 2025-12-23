@@ -47,6 +47,9 @@ const Index = () => {
       <div className="grain-overlay" />
       <MagicalSnow />
       <GoldCursor />
+      {/* Mobile: 6px border, Desktop: 20px border. This prevents "squished" look on phones. */}
+      <div className="fixed inset-0 pointer-events-none z-[60] border-[6px] md:border-[20px] border-white/40 mix-blend-soft-light" />
+      <div className="fixed inset-2 md:inset-8 pointer-events-none z-[60] border border-magazine-gold/20" />
       <audio ref={audioRef} loop src="https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3" />
 
       {/* --- LOCK SCREEN --- */}
@@ -121,7 +124,7 @@ const Index = () => {
 
             {/* 5. Open When Cards (Interactive) */}
             <OpenWhen />
-            
+
             {/* 7. Dreams (Checklist) */}
             <MagazineDreams />
 
