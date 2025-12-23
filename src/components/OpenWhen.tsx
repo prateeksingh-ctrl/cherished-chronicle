@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import { Mail } from 'lucide-react';
 
 const CARDS = [
-  { id: 1, label: "Open when you miss me", content: "Remember that I am just a phone call away. Look at the photo from our beach trip." },
-  { id: 2, label: "Open when you're sad", content: "You are the strongest person I know. This feeling is temporary, but my love isn't." },
+  { id: 1, label: "Open when you miss me", content: "Remember that I am just a phone call away. Look at the photo from our first date." },
+  { id: 2, label: "Open when you're sad", content: "You are the strongest person I know. neither this feeling is temporary, nor my love." },
   { id: 3, label: "Open when you're happy", content: "I hope I am there to share it with you. Save this moment." },
-  { id: 4, label: "Open when you need a laugh", content: "Remember the time we tried to cook pasta and set off the alarm?" }
+  { id: 4, label: "Open when you need a laugh", content: "Remember the time we put on that octopus on my head" }
 ];
 
 const OpenWhen = () => {

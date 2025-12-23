@@ -47,7 +47,7 @@ const LoveLetterSection = () => {
     salutation: "My Dearest Love,",
     paragraphs: [
       "Every moment with you feels like a page from a beautiful story that I never want to end. This year has been nothing short of magical — filled with laughter, adventures, and countless memories that I will treasure forever.",
-      "You are my favorite hello and my hardest goodbye. In your eyes, I found a home, and in your heart, I found my peace. Thank you for being my partner in everything, for choosing me every single day.",
+      "You are my favorite hiiii and my hardest goodbye. In your eyes, I found a home, and in your heart, I found my peace. Thank you for being my partner in everything, for choosing me every single day.",
       "As we step into another year together, I promise to love you more deeply, to hold you closer, and to build a future that's as beautiful as the love we share.",
     ],
     closing: "Forever & Always Yours,",
@@ -224,8 +224,8 @@ const LoveLetterSection = () => {
               </>
             )}
           </motion.button>
-          <p className="mt-3 font-handwritten text-lg text-magazine-cream/40">
-            Edit LoveLetterSection.tsx to customize your letter
+          <p className="mt-3 font-handwritten text-lg text-magazine-cream/40">p
+
           </p>
         </motion.div>
       </div>
