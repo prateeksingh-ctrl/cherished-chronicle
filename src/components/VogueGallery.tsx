@@ -41,7 +41,7 @@ const MEMORIES = [
     date: "MAY 30, 2025",
     title: "I'LL SLEEP",
     story: "TUM baat kro main so jati hu.",
-    image: "https://res.cloudinary.com/duv8bi3tc/image/upload/v1766517316/6025B922-75DB-4E09-9C0A-EFB409406608_1_102_o_o9jqxo.jpg"
+    image: "https://res.cloudinary.com/duv8bi3tc/image/upload/v1766517159/04DAA7CE-683C-484D-9F2B-928691BFFC2F_1_102_o_ozmjbp.jpg"
   },
   {
     id: 7,
