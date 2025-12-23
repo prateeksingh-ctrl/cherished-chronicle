@@ -4,10 +4,10 @@ import GoldCursor from '../components/GoldCursor';
 import NavigationDock from '../components/NavigationDock';
 import HeroSection from '../components/HeroSection';
 import VogueGallery from '../components/VogueGallery';
+import MusicSection from '../components/MusicSection';
 import DreamsSection from '../components/DreamsSection';
 import SantaUnveiling from '../components/SantaUnveiling';
 import ScratchCard from '../components/ScratchCard';
-import BackgroundMusic from '../components/BackgroundMusic';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('hero');
@@ -19,7 +19,7 @@ const Index = () => {
     setShowCursor(hasHover);
 
     // Intersection Observer for active section
-    const sections = ['hero', 'memories', 'goals', 'unveiling', 'surprise'];
+    const sections = ['hero', 'memories', 'music', 'goals', 'unveiling', 'surprise'];
     const observers = sections.map((sectionId) => {
       const element = document.getElementById(sectionId);
       if (!element) return null;
@@ -65,9 +65,6 @@ const Index = () => {
         />
       </Helmet>
 
-      {/* Background Music */}
-      <BackgroundMusic />
-
       {/* Gold Cursor Effect (desktop only) */}
       {showCursor && <GoldCursor />}
 
@@ -78,6 +75,7 @@ const Index = () => {
       <main className="relative">
         <HeroSection onStartJourney={handleStartJourney} />
         <VogueGallery />
+        <MusicSection />
         <DreamsSection />
         <SantaUnveiling />
         <ScratchCard />
