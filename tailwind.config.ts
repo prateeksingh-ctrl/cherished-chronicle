@@ -14,9 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        'editorial': ['Playfair Display', 'serif'],
-        'body': ['Lato', 'sans-serif'],
-        'handwritten': ['Caveat', 'cursive'],
+        'editorial': ['Cormorant Garamond', 'serif'],
+        'body': ['Montserrat', 'sans-serif'],
+        'handwritten': ['Great Vibes', 'cursive'],
+        'script': ['Pinyon Script', 'cursive'],
       },
       colors: {
         border: "hsl(var(--border))",

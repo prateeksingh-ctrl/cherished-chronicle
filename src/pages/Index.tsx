@@ -3,10 +3,11 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import GoldCursor from '../components/GoldCursor';
 import NavigationDock from '../components/NavigationDock';
 import HeroSection from '../components/HeroSection';
-import MemoriesSection from '../components/MemoriesSection';
-import VinylPlayer from '../components/VinylPlayer';
-import GoalsSection from '../components/GoalsSection';
+import VogueGallery from '../components/VogueGallery';
+import DreamsSection from '../components/DreamsSection';
+import SantaUnveiling from '../components/SantaUnveiling';
 import ScratchCard from '../components/ScratchCard';
+import BackgroundMusic from '../components/BackgroundMusic';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('hero');
@@ -18,7 +19,7 @@ const Index = () => {
     setShowCursor(hasHover);
 
     // Intersection Observer for active section
-    const sections = ['hero', 'memories', 'music', 'goals', 'surprise'];
+    const sections = ['hero', 'memories', 'goals', 'unveiling', 'surprise'];
     const observers = sections.map((sectionId) => {
       const element = document.getElementById(sectionId);
       if (!element) return null;
@@ -64,6 +65,9 @@ const Index = () => {
         />
       </Helmet>
 
+      {/* Background Music */}
+      <BackgroundMusic />
+
       {/* Gold Cursor Effect (desktop only) */}
       {showCursor && <GoldCursor />}
 
@@ -73,9 +77,9 @@ const Index = () => {
       {/* Main Content */}
       <main className="relative">
         <HeroSection onStartJourney={handleStartJourney} />
-        <MemoriesSection />
-        <VinylPlayer />
-        <GoalsSection />
+        <VogueGallery />
+        <DreamsSection />
+        <SantaUnveiling />
         <ScratchCard />
       </main>
     </HelmetProvider>

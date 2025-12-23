@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 2025 Recap Magazine - Crimson & Mocha Design System */
+/* 2025 Recap Magazine - Luxury Editorial Design System */
 /* All colors in HSL for Tailwind compatibility */
 
 @layer base {
@@ -92,23 +92,27 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Montserrat', sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Cormorant Garamond', serif;
   }
 
   .font-handwritten {
-    font-family: 'Caveat', cursive;
+    font-family: 'Great Vibes', cursive;
+  }
+
+  .font-script {
+    font-family: 'Pinyon Script', cursive;
   }
 
   .font-editorial {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Cormorant Garamond', serif;
   }
 
   .font-body {
-    font-family: 'Lato', sans-serif;
+    font-family: 'Montserrat', sans-serif;
   }
 }
 
@@ -231,6 +235,28 @@
   .animate-pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
   }
+
+  /* Reveal Animation */
+  @keyframes reveal-up {
+    from {
+      opacity: 0;
+      transform: translateY(60px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-reveal {
+    animation: reveal-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Smooth parallax container */
+  .parallax-container {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
 }
 
 @layer utilities {
@@ -256,5 +282,10 @@
   ::selection {
     background: hsl(var(--accent) / 0.3);
     color: hsl(var(--foreground));
+  }
+
+  /* Smooth scroll */
+  html {
+    scroll-behavior: smooth;
   }
 }
