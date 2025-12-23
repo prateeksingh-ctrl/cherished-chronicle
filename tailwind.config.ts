@@ -3,69 +3,52 @@ import type { Config } from "tailwindcss";
 export default {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
-  prefix: "",
   theme: {
     container: {
-        center: true,
-        padding: '2rem',
-        screens: {
-            '2xl': '1400px'
-        }
+      center: true,
+      padding: '2rem',
+      screens: { '2xl': '1400px' },
     },
     extend: {
-        fontFamily: {
-            // "The Cover Font" - Massive, high contrast
-            display: ['Playfair Display', 'serif'], 
-            // " The Article Font" - Easy to read but elegant
-            editorial: ['Libre Baskerville', 'serif'],
-            // "The Caption Font" - Clean, modern, Swiss-style
-            sans: ['DM Sans', 'sans-serif'],
-            handwritten: ['Caveat', 'cursive'],
-        },
-        letterSpacing: {
-            'widest-xl': '0.25em', // For "DECEMBER ISSUE" text
-        },
-        colors: {
-            border: 'hsl(var(--border))',
-            input: 'hsl(var(--input))',
-            ring: 'hsl(var(--ring))',
-            background: 'hsl(var(--background))',
-            foreground: 'hsl(var(--foreground))',
-            primary: {
-                DEFAULT: 'hsl(var(--primary))',
-                foreground: 'hsl(var(--primary-foreground))'
-            },
-            magazine: {
-                // Refined Gold Palette (More metallic, less yellow)
-                gold: '#D4AF37', 
-                'gold-dim': '#C5A028',
-                'gold-light': '#F1E5AC',
-                'paper': '#F9F7F1', // Warm off-white for text blocks
-                'black': '#0a0a0a', // Rich black, not #000
-                'charcoal': '#1c1c1c',
-            }
-        },
-        backgroundImage: {
-            // A subtle noise texture for that "printed paper" feel
-            'paper-texture': "url('https://www.transparenttextures.com/patterns/cream-paper.png')",
-            'gold-gradient': 'linear-gradient(135deg, #BF953F 0%, #FCF6BA 50%, #B38728 100%)', // True Metallic
-            'night-gradient': 'linear-gradient(to bottom, #050505, #111111)',
-        },
-        keyframes: {
-            'fade-in': {
-                '0%': { opacity: '0' },
-                '100%': { opacity: '1' }
-            },
-            'slide-up': {
-                '0%': { transform: 'translateY(20px)', opacity: '0' },
-                '100%': { transform: 'translateY(0)', opacity: '1' }
-            }
-        },
-        animation: {
-            'fade-in': 'fade-in 1s ease-out forwards',
-            'slide-up': 'slide-up 1s ease-out forwards',
+      fontFamily: {
+        // "Instrument Serif" is the new high-end editorial font
+        serif: ['"Instrument Serif"', 'serif'],
+        // "Geist" or "Inter" for clean readability
+        sans: ['"Inter"', 'sans-serif'],
+        hand: ['"Dancing Script"', 'cursive'],
+      },
+      colors: {
+        magazine: {
+          paper: '#FDFBF7', // A warm, expensive paper feel (not harsh white)
+          ink: '#1A1A1A',   // Soft charcoal (easier on eyes than black)
+          gold: '#C6A87C',  // Muted, antique gold (not yellow)
+          rose: '#E5D4D0',  // Very subtle blush for backgrounds
+          accent: '#D94838', // International Red (for small "Love" details)
         }
-    }
+      },
+      animation: {
+        'float': 'float 6s ease-in-out infinite',
+        'grain': 'grain 8s steps(10) infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        grain: {
+          '0%, 100%': { transform: 'translate(0, 0)' },
+          '10%': { transform: 'translate(-5%, -10%)' },
+          '20%': { transform: 'translate(-15%, 5%)' },
+          '30%': { transform: 'translate(7%, -25%)' },
+          '40%': { transform: 'translate(-5%, 25%)' },
+          '50%': { transform: 'translate(-15%, 10%)' },
+          '60%': { transform: 'translate(15%, 0%)' },
+          '70%': { transform: 'translate(0%, 15%)' },
+          '80%': { transform: 'translate(3%, 35%)' },
+          '90%': { transform: 'translate(-10%, 10%)' },
+        }
+      }
+    },
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
