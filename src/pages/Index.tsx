@@ -1,71 +1,80 @@
 import { useState, useEffect, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Lock } from 'lucide-react';
 
-// Components
-import HeroSection from '../components/HeroSection';
-import MagazineDreams from '../components/MagazineDreams';
-import VogueGallery from '../components/VogueGallery';
-import LoveLetterSection from '../components/LoveLetterSection';
-
-// NEW IMPORTS
+// --- AMBIENT EFFECTS ---
 import MagicalSnow from '../components/MagicalSnow';
 import GoldCursor from '../components/GoldCursor';
 
-const TimelineSection = () => (
-  <div className="h-screen flex items-center justify-center bg-magazine-ink text-magazine-paper relative overflow-hidden">
-    {/* Dynamic Background Element */}
-    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-magazine-gold via-transparent to-transparent animate-pulse" />
-    <div className="text-center z-10">
-      <h2 className="font-serif text-6xl italic animate-float">The Timeline</h2>
-      <p className="font-sans text-sm tracking-widest uppercase mt-4 text-magazine-gold">Our History in Dates</p>
-    </div>
-  </div>
-);
+// --- SECTIONS (THE NARRATIVE) ---
+import HeroSection from '../components/HeroSection';         // The Cover
+import VogueGallery from '../components/VogueGallery';       // The Photos
+import SeasonsTimeline from '../components/SeasonsTimeline'; // The Story (Winter/Spring/etc)
+import MagazineInterview from '../components/MagazineInterview'; // The Q&A // The Voting
+import MagazineDreams from '../components/MagazineDreams';   // The Future (Checklist)
+import MagazineFooter from '../components/MagazineFooter';   // The Back Cover
 
 const Index = () => {
+  // State for the "Lock Screen" and "Audio"
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Background Audio Logic
+  // Audio Logic: Auto-play gently when unlocked
   useEffect(() => {
     if (isUnlocked && audioRef.current) {
-      audioRef.current.volume = 0.4;
-      audioRef.current.play().then(() => setIsPlaying(true)).catch(console.error);
+      audioRef.current.volume = 0.4; // not too loud
+      audioRef.current.play()
+        .then(() => setIsPlaying(true))
+        .catch((e) => console.log("Audio requires interaction first", e));
     }
   }, [isUnlocked]);
 
+  // Toggle Audio Button Logic
   const toggleAudio = () => {
     if (audioRef.current) {
-      if (isPlaying) audioRef.current.pause();
-      else audioRef.current.play();
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
       setIsPlaying(!isPlaying);
     }
   };
 
   return (
-    <div className="relative w-full min-h-screen cursor-none"> 
-      {/* cursor-none hides default mouse so GoldCursor shows up */}
+    <div className="relative w-full min-h-screen cursor-none bg-magazine-paper text-magazine-ink overflow-x-hidden">
+      <Helmet>
+        <title>THE ANNUAL | 2025 Holiday Edition</title>
+        <meta name="theme-color" content="#1a1a1a" />
+      </Helmet>
 
-      {/* 1. DYNAMIC LAYERS */}
-      <div className="grain-overlay" /> {/* Texture */}
-      <MagicalSnow /> {/* The Christmas Atmosphere */}
-      <GoldCursor /> {/* The Interactive Magic */}
+      {/* --- 1. GLOBAL AMBIENCE --- */}
+      
+      {/* Film Grain Overlay for that "Printed Paper" texture */}
+      <div className="grain-overlay" />
+      
+      {/* Floating Gold & White Particles */}
+      <MagicalSnow />
+      
+      {/* Luxury Trail Cursor */}
+      <GoldCursor />
 
+      {/* Hidden Audio Source (Change src to your preferred mp3) */}
       <audio ref={audioRef} loop src="https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3" />
 
-      {/* 2. LOCKED CURTAIN */}
+      {/* --- 2. THE LOCK SCREEN (CURTAIN) --- */}
       <AnimatePresence>
         {!isUnlocked && (
           <motion.div 
             initial={{ y: 0 }}
             exit={{ y: "-100%", transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }}
-            className="fixed inset-0 z-50 bg-magazine-ink text-magazine-paper flex flex-col items-center justify-center"
+            className="fixed inset-0 z-[100] bg-magazine-ink text-magazine-paper flex flex-col items-center justify-center"
           >
              {/* Breathing Glow Effect behind text */}
             <motion.div 
-                animate={{ opacity: [0.5, 0.8, 0.5], scale: [1, 1.05, 1] }}
+                animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }}
                 transition={{ duration: 4, repeat: Infinity }}
                 className="absolute w-[300px] h-[300px] bg-magazine-gold/20 rounded-full blur-[100px]"
             />
@@ -74,20 +83,23 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.5 }}
-              className="text-center space-y-8 z-10"
+              className="text-center space-y-8 z-10 relative"
             >
-              <h1 className="font-serif text-5xl md:text-8xl tracking-tight">The Annual</h1>
+              <h1 className="font-serif text-6xl md:text-9xl tracking-tight text-white mix-blend-difference">
+                The Annual
+              </h1>
               <div className="font-sans text-xs tracking-[0.4em] uppercase text-magazine-gold">
-                Strictly Confidential
+                Strictly Confidential • Vol. 2025
               </div>
               
+              {/* Unlock Button */}
               <button 
                 onClick={() => setIsUnlocked(true)}
-                className="interactive group relative px-8 py-3 overflow-hidden rounded-full border border-magazine-paper/20 hover:border-magazine-gold transition-colors"
+                className="group relative px-10 py-4 overflow-hidden rounded-full border border-white/20 hover:border-magazine-gold transition-colors duration-500 mx-auto block mt-12"
               >
                 <div className="absolute inset-0 bg-magazine-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-                <span className="relative z-10 font-sans text-xs uppercase tracking-widest group-hover:text-magazine-ink transition-colors flex items-center gap-2">
-                  <Lock size={12} /> Unlock Experience
+                <span className="relative z-10 font-sans text-xs uppercase tracking-widest text-white group-hover:text-black transition-colors flex items-center gap-3">
+                  <Lock size={14} /> Open The Experience
                 </span>
               </button>
             </motion.div>
@@ -95,30 +107,52 @@ const Index = () => {
         )}
       </AnimatePresence>
 
-      {/* 3. MAIN CONTENT */}
+      {/* --- 3. MAIN MAGAZINE CONTENT --- */}
       <AnimatePresence>
         {isUnlocked && (
           <motion.main 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="relative"
+            className="relative w-full"
           >
-            {/* Audio Toggle */}
-            <div className="fixed bottom-8 right-8 z-40">
+            {/* Sticky Audio Controller (Bottom Right) */}
+            <div className="fixed bottom-8 right-8 z-50">
               <button 
                 onClick={toggleAudio} 
-                className="interactive w-12 h-12 rounded-full bg-magazine-ink/10 backdrop-blur-md border border-magazine-ink/20 flex items-center justify-center hover:bg-magazine-gold hover:text-white transition-all duration-300 animate-pulse-soft"
+                className="w-12 h-12 rounded-full bg-magazine-ink/90 backdrop-blur-md border border-magazine-gold/30 flex items-center justify-center hover:bg-magazine-gold hover:text-white transition-all duration-300 animate-pulse-soft text-magazine-gold shadow-2xl"
               >
                 {isPlaying ? <Pause size={16} /> : <Play size={16} />}
               </button>
             </div>
 
-            <HeroSection />
-            <VogueGallery />
-            <LoveLetterSection />
-            <TimelineSection />
-            <MagazineDreams />
+            {/* SECTION 1: The Cover */}
+            <div id="cover">
+              <HeroSection />
+            </div>
+
+            {/* SECTION 2: The Spread (Photos) */}
+            <div id="gallery">
+              <VogueGallery />
+            </div>
+
+            {/* SECTION 3: The Story (Parallax Seasons) */}
+            <div id="timeline">
+              <SeasonsTimeline />
+            </div>
+
+            {/* SECTION 4: The Conversation (Q&A) */}
+            <div id="interview">
+              <MagazineInterview />
+            </div>
+
+            {/* SECTION 6: The Vision (Checklist) */}
+            <div id="dreams">
+              <MagazineDreams />
+            </div>
+
+            {/* SECTION 7: The End (Footer) */}
+            <MagazineFooter />
 
           </motion.main>
         )}
